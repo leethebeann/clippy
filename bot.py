@@ -15,9 +15,9 @@ bot = commands.Bot(command_prefix='!')
 
 #commands
 
-@bot.command(name='99', help='Responds with a random quote from Brooklyn 99')
-async def nine_nine(ctx):
-    print(ctx)
+@bot.command(name='pomodoro', help='Starts the pomodoro clock')
+async def pomodoro_timer(ctx):
+    #print(ctx)
     brooklyn_99_quotes = [
         'I\'m the human form of the 💯 emoji.',
         'Bingpot!',
@@ -27,8 +27,11 @@ async def nine_nine(ctx):
         ),
     ]
 
-    response = random.choice(brooklyn_99_quotes)
+    start_timer = "You have 25 minutes left!"
+
+    response = start_timer
     await ctx.send(response)
+
     
 '''
 @bot.event
