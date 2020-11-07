@@ -17,6 +17,34 @@ bot = commands.Bot(command_prefix='!')
 bot.timer_manager = timers.TimerManager(bot)
 pomodoro_timer = True
 
+#to do list
+todo_list = []
+#three commands: !show, !add, !done
+@bot.command(name='show', help="shows a user's todo list")
+async def pomodoro(ctx):
+    global todo_list
+    #print(todo_list)
+    count = 1
+    for items in todo_list:
+        listItem = "{0}. {1}".format(count, items)
+        await ctx.send(listItem)
+        count += 1
+
+@bot.command(name='add', help="adds to a user's to do list")
+async def pomodoro(ctx, *, text):
+    global todo_list
+    todo_list.append(text)
+    #print(todo_list)
+    await ctx.send("{0} has been added".format(text))
+
+@bot.command(name='done', help="deletes a to do list item from a user's list")
+async def pomodoro(ctx, *, text): #text would be the index of the todo list item
+    global todo_list
+    print(todo_list)
+    index = int(text)
+    todo_list.pop(index+1)
+    await ctx.send("Congrats for finishing a task! {0} has been removed from the list".format(text))
+
 #pomodoro timer
 @bot.command(name='pomodoro', help='Starts pomodoro timer')
 async def pomodoro(ctx):
