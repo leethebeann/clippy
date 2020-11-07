@@ -107,14 +107,16 @@ async def stopPomodoro(ctx):
 # timer countdown
 showTimer = False
 
-def countdown(t): 
+
+async def countdown(t): 
     while t: 
         global showTimer
         mins, secs = divmod(t, 60) 
         timer = '{:02d}:{:02d}'.format(mins, secs) 
         if(showTimer):
-            showTimer = False
-            print (timer, end="\r") 
+            #showTimer = False
+            #print (timer, end="\r") 
+            return t, timer
         time.sleep(1) 
         t -= 1
 
@@ -200,7 +202,7 @@ async def wolfram(ctx, *, text):
   
     # App id obtained by the above steps 
     APP_ID = os.getenv('APP_ID')
-    
+
     # Instance of wolf ram alpha  
     # client class 
     client = wolframalpha.Client(APP_ID) 
