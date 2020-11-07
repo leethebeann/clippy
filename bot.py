@@ -20,31 +20,50 @@ pomodoro_timer = True
 #pomodoro timer
 @bot.command(name='pomodoro', help='Starts pomodoro timer')
 async def pomodoro(ctx):
+    start_message = [
+        "You have 25 minutes left! Get to studying :)",
+        "Only 25 more minutes to go!",
+        "Get studying! 25 minutes, on the clock."
+    ]
+
+    almost_there_message = [
+        "Don't give up! Only 5 more minutes ",
+        "Only 5 more minutes to go. You got this ",
+        "5 MORE MINUTES ",
+    ]
+
+    break_message = [
+        "BREAK TIME FOR ",
+        "I've got a gift: it's a 5 minute break time for  ",
+        "Come back in 5 minutes ",
+    ]
+
     while(pomodoro_timer):
-        print(pomodoro_timer)
-        await ctx.send("You have 25 minutes left! Get to studying :)")
-        
+        response = random.choice(start_message)
+        #await ctx.send("Hey <@{0}>! You have 25 minutes left! Get to studying :)".format(ctx.author.id))
+        await ctx.send("Hey <@{0}>! {1}".format(ctx.author.id, response))
         await asyncio.sleep(10)
 
         if(pomodoro_timer):
-
-            await ctx.send("Start your break!")
-            
+            response = random.choice(almost_there_message)
+            await ctx.send("{1} <@{0}>!".format(ctx.author.id, response))
             await asyncio.sleep(5)
 
-@bot.command(name='stop', help='Stops all pomodoro timer')
+        if(pomodoro_timer):
+            response = random.choice(break_message)
+            await ctx.send("{1} <@{0}>!".format(ctx.author.id, response))
+            await asyncio.sleep(5)
+
+@bot.command(name='stop', help='Stops all pomodoro timers')
 async def stopPomodoro(ctx):
     global pomodoro_timer 
     pomodoro_timer = False
-    print(pomodoro_timer)
     await ctx.send("Pomodoro stopped!")
 
 # sets reminders
-@bot.command(name='remind', help='Reminder')
+@bot.command(name='remind', help='Set a reminder for any day in the format Year/Month/Day (message)')
 async def remind(ctx, time, *, text):
-    """Remind to do something on a date.
-
-    The date must be in ``Y/M/D`` format."""
+    #Remind to do something on a date. The date must be in ``Y/M/D`` format.
     date = datetime.datetime(*map(int, time.split("/")))
     print(date)
 
@@ -74,7 +93,7 @@ async def on_ready():
 
 '''
 
-#event responses
+#motivational responses based on the keywords "tired" and "failed"
 @bot.event
 async def on_message(message):
     await bot.process_commands(message)
