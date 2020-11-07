@@ -3,6 +3,7 @@ import os
 import random
 import datetime
 import asyncio
+import time
 
 import discord
 from dotenv import load_dotenv
@@ -21,7 +22,7 @@ pomodoro_timer = True
 todo_list = []
 #three commands: !show, !add, !done
 @bot.command(name='show', help="shows a user's todo list")
-async def pomodoro(ctx):
+async def toDoList(ctx):
     global todo_list
     #print(todo_list)
     count = 1
@@ -32,9 +33,8 @@ async def pomodoro(ctx):
         count += 1
     
 
-
 @bot.command(name='add', help="adds to a user's to do list")
-async def pomodoro(ctx, *, text):
+async def addToList(ctx, *, text):
     global todo_list
 
     todo_list.append(text)
@@ -42,7 +42,7 @@ async def pomodoro(ctx, *, text):
     await ctx.send("{0} has been added".format(text))
 
 @bot.command(name='done', help="deletes a to do list item from a user's list by list item number")
-async def pomodoro(ctx, *, text): #text would be the index of the todo list item
+async def removeFromList(ctx, *, text): #text would be the index of the todo list item
     global todo_list
     print(todo_list)
 
@@ -51,8 +51,9 @@ async def pomodoro(ctx, *, text): #text would be the index of the todo list item
     todo_list.pop(index-1)
     await ctx.send("Congrats for finishing a task! \"{0}\" has been removed from the list".format(task))
 
-#pomodoro timer
-@bot.command(name='pomodoro', help='Starts pomodoro timer')
+#pomodoro study timer
+#commands: !pomodoro,!stop
+@bot.command(name='pomodoro', help='starts pomodoro timer')
 async def pomodoro(ctx):
 
     start_message = [
@@ -75,8 +76,9 @@ async def pomodoro(ctx):
 
     while(pomodoro_timer):
         response = random.choice(start_message)
-        #await ctx.send("Hey <@{0}>! You have 25 minutes left! Get to studying :)".format(ctx.author.id))
+        
         await ctx.send("Hey <@{0}>! {1}".format(ctx.author.id, response))
+        countdown(20)
         await asyncio.sleep(10)
 
         if(pomodoro_timer):
@@ -89,12 +91,31 @@ async def pomodoro(ctx):
             await ctx.send("{1} <@{0}>!".format(ctx.author.id, response))
             await asyncio.sleep(5)
 
-@bot.command(name='stop', help='Stops all pomodoro timers')
+@bot.command(name='stop', help='stops all pomodoro timers')
 async def stopPomodoro(ctx):
     global pomodoro_timer 
     pomodoro_timer = False
     await ctx.send("Pomodoro stopped!")
     pomodoro_timer = True
+
+# timer countdown
+showTimer = False
+@bot.event
+async def on_countdown(t): 
+    while t: 
+        global showTimer
+        mins, secs = divmod(t, 60) 
+        timer = '{:02d}:{:02d}'.format(mins, secs) 
+        if(showTimer):
+            showTimer = False
+            await channel.send(timer, end="\r") 
+        time.sleep(1) 
+        t -= 1
+
+@bot.command(name='timeremaining', help='Displays time remaining for pomodoro clock') 
+async def timeRemaining(ctx):
+    global showTimer
+    showTimer = True
 
 # sets reminders
 @bot.command(name='remind', help='Set a reminder for any day in the format Year/Month/Day (message)')
@@ -128,8 +149,7 @@ async def on_ready():
     members = '\n - '.join([member.name for member in guild.members])
     print(f'Guild Members:\n - {members}')
 
-'''
-
+'''   
 
 #motivational responses based on the keywords "tired" and "failed"
 @bot.event
