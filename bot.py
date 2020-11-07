@@ -12,18 +12,10 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-
+#variables
 bot = commands.Bot(command_prefix='!')
 bot.timer_manager = timers.TimerManager(bot)
-
 pomodoro_timer = True
-
-@bot.command(name='stop', help='Stops pomodoro timer')
-async def stopPomodoro(ctx):
-    global pomodoro_timer 
-    pomodoro_timer = False
-    print(pomodoro_timer)
-    await ctx.send("Pomodoro stopped!")
 
 #pomodoro timer
 @bot.command(name='pomodoro', help='Starts pomodoro timer')
@@ -40,6 +32,12 @@ async def pomodoro(ctx):
             
             await asyncio.sleep(5)
 
+@bot.command(name='stop', help='Stops all pomodoro timer')
+async def stopPomodoro(ctx):
+    global pomodoro_timer 
+    pomodoro_timer = False
+    print(pomodoro_timer)
+    await ctx.send("Pomodoro stopped!")
 
 # sets reminders
 @bot.command(name='remind', help='Reminder')
