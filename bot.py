@@ -4,10 +4,13 @@ import random
 import datetime
 import asyncio
 import time
+import wolframalpha 
 
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands, timers
+from googlesearch import search
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -26,6 +29,9 @@ async def toDoList(ctx):
     global todo_list
     #print(todo_list)
     count = 1
+
+    if len(todo_list) == 0:
+        await ctx.send("Congrats! Your To Do List is empty!")
     
     for items in todo_list:
         listItem = "{0}. {1}".format(count, items)
@@ -100,15 +106,15 @@ async def stopPomodoro(ctx):
 
 # timer countdown
 showTimer = False
-@bot.event
-async def on_countdown(t): 
+
+def countdown(t): 
     while t: 
         global showTimer
         mins, secs = divmod(t, 60) 
         timer = '{:02d}:{:02d}'.format(mins, secs) 
         if(showTimer):
             showTimer = False
-            await channel.send(timer, end="\r") 
+            print (timer, end="\r") 
         time.sleep(1) 
         t -= 1
 
@@ -181,6 +187,32 @@ async def on_message(message):
     if 'tired' in message.content:
         response = random.choice(tired_quote)
         await message.channel.send(response)
+
+
+@bot.command(name='search', help='google search a topic of interest (Enter the topic you want to search)')  #Google Search Feature 
+async def googleSearch(ctx, *, text):
+    query = text
+    for result in search(query, tld="co.in", num=3, stop=3, pause=2):
+        await ctx.send(result)
+
+@bot.command(name='wolf', help='use wolfram alpha to search put math problems and etc')
+async def wolfram(ctx, *, text):
+  
+    # App id obtained by the above steps 
+    APP_ID = os.getenv('APP_ID')
     
-        
+    # Instance of wolf ram alpha  
+    # client class 
+    client = wolframalpha.Client(APP_ID) 
+    
+    # Stores the response from  
+    # wolf ram alpha 
+    res = client.query(text) 
+    
+    # Includes only text from the response 
+    answer = next(res.results).text 
+    
+    await ctx.send("The answer is: {0}".format(answer))
+
+
 bot.run(TOKEN)
