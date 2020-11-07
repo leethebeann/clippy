@@ -30,16 +30,15 @@ async def stopPomodoro(ctx):
 async def pomodoro(ctx):
     while(pomodoro_timer):
         print(pomodoro_timer)
-        if(pomodoro_timer)
-            await ctx.send("You have 25 minutes left! Get to studying :)")
-            
-            await asyncio.sleep(10)
+        await ctx.send("You have 25 minutes left! Get to studying :)")
+        
+        await asyncio.sleep(10)
+
+        if(pomodoro_timer):
 
             await ctx.send("Start your break!")
             
             await asyncio.sleep(5)
-
-
 
 
 # sets reminders
@@ -109,6 +108,4 @@ async def on_message(message):
         await message.channel.send(response)
     
         
-
-
 bot.run(TOKEN)
