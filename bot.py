@@ -25,29 +25,36 @@ async def pomodoro(ctx):
     global todo_list
     #print(todo_list)
     count = 1
+    
     for items in todo_list:
         listItem = "{0}. {1}".format(count, items)
         await ctx.send(listItem)
         count += 1
+    
+
 
 @bot.command(name='add', help="adds to a user's to do list")
 async def pomodoro(ctx, *, text):
     global todo_list
+
     todo_list.append(text)
     #print(todo_list)
     await ctx.send("{0} has been added".format(text))
 
-@bot.command(name='done', help="deletes a to do list item from a user's list")
+@bot.command(name='done', help="deletes a to do list item from a user's list by list item number")
 async def pomodoro(ctx, *, text): #text would be the index of the todo list item
     global todo_list
     print(todo_list)
+
     index = int(text)
-    todo_list.pop(index+1)
-    await ctx.send("Congrats for finishing a task! {0} has been removed from the list".format(text))
+    task = todo_list[index-1]
+    todo_list.pop(index-1)
+    await ctx.send("Congrats for finishing a task! \"{0}\" has been removed from the list".format(task))
 
 #pomodoro timer
 @bot.command(name='pomodoro', help='Starts pomodoro timer')
 async def pomodoro(ctx):
+
     start_message = [
         "You have 25 minutes left! Get to studying :)",
         "Only 25 more minutes to go!",
@@ -87,6 +94,7 @@ async def stopPomodoro(ctx):
     global pomodoro_timer 
     pomodoro_timer = False
     await ctx.send("Pomodoro stopped!")
+    pomodoro_timer = True
 
 # sets reminders
 @bot.command(name='remind', help='Set a reminder for any day in the format Year/Month/Day (message)')
@@ -108,7 +116,74 @@ async def on_reminder(channel_id, author_id, text):
 @bot.event
 async def on_ready():
     for guild in bot.guilds:
-        if guild.name == GUILD:
+        if guild.na,
+        "Life is tough but so are you."me == GUILD:
+            break
+
+    print(
+        f'{bot.user} is connected to the following guild:\n'
+        f'{guild.name}(id: {guild.id})\n'
+    )
+
+    members = '\n - '.join([member.name for member in guild.members])
+    print(f'Guild Members:\n - {members}')
+
+'''
+
+#motivational responses based on the keywords "tired" and "failed"
+@bot.event
+async def on_message(message):
+    await bot.process_commands(message)
+
+    if message.author == bot.user:
+        return
+
+    #add more quotes!
+    fail_quote = [
+        "Don't give up!",
+        "Failure is only the opportunity to begin again more intelligently.",
+        "You can always bounce back!",
+        "Failure is an attitude, not an outcome."
+    ]
+
+    tired_quote = [
+        "She's strong but she's exhausted.",
+        "I know you are tired, but you have to keep going!",
+        "The more you sweat in practice, the less you bleed in battle.",
+        "WAKE UP!!"
+            break
+
+    print(
+        f'{bot.user} is connected to the following guild:\n'
+        f'{guild.name}(id: {guild.id})\n'
+    )
+
+    members = '\n - '.join([member.name for member in guild.members])
+    print(f'Guild Members:\n - {members}')
+
+'''
+
+#motivational responses based on the keywords "tired" and "failed"
+@bot.event
+async def on_message(message):
+    await bot.process_commands(message)
+
+    if message.author == bot.user:
+        return
+
+    #add more quotes!
+    fail_quote = [
+        "Don't give up!",
+        "Failure is only the opportunity to begin again more intelligently.",
+        "You can always bounce back!",
+        "Failure is an attitude, not an outcome."
+    ]
+
+    tired_quote = [
+        "She's strong but she's exhausted.",
+        "I know you are tired, but you have to keep going!",
+        "The more you sweat in practice, the less you bleed in battle.",
+        "WAKE UP!!"
             break
 
     print(
