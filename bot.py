@@ -1,39 +1,65 @@
 # bot.py
 import os
 import random
+import datetime
+import asyncio
 
 import discord
 from dotenv import load_dotenv
-from discord.ext import commands
+from discord.ext import commands, timers
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 
-#client = discord.Client()
+
 bot = commands.Bot(command_prefix='!')
+bot.timer_manager = timers.TimerManager(bot)
 
-#commands
+pomodoro_timer = True
 
-@bot.command(name='pomodoro', help='Starts the pomodoro clock')
-async def pomodoro_timer(ctx):
-    #print(ctx)
-    brooklyn_99_quotes = [
-        'I\'m the human form of the 💯 emoji.',
-        'Bingpot!',
-        (
-            'Cool. Cool cool cool cool cool cool cool, '
-            'no doubt no doubt no doubt no doubt.'
-        ),
-    ]
+@bot.command(name='stop', help='Stops pomodoro timer')
+async def stopPomodoro(ctx):
+    global pomodoro_timer 
+    pomodoro_timer = False
+    print(pomodoro_timer)
+    await ctx.send("Pomodoro stopped!")
 
-    start_timer = "You have 25 minutes left!"
+#pomodoro timer
+@bot.command(name='pomodoro', help='Starts pomodoro timer')
+async def pomodoro(ctx):
+    while(pomodoro_timer):
+        print(pomodoro_timer)
+        await ctx.send("You have 25 minutes left! Get to studying :)")
+        
+        await asyncio.sleep(10)
 
-    response = start_timer
-    await ctx.send(response)
+        await ctx.send("Start your break!")
+        
+        await asyncio.sleep(5)
 
+
+
+
+# sets reminders
+@bot.command(name='remind', help='Reminder')
+async def remind(ctx, time, *, text):
+    """Remind to do something on a date.
+
+    The date must be in ``Y/M/D`` format."""
+    date = datetime.datetime(*map(int, time.split("/")))
+    print(date)
+
+    bot.timer_manager.create_timer("reminder", date, args=(ctx.channel.id, ctx.author.id, text))
     
-'''
+@bot.event
+async def on_reminder(channel_id, author_id, text):
+    channel = bot.get_channel(channel_id)
+
+    await channel.send("Hey, <@{0}>, remember to: {1}".format(author_id, text))
+
+
+''' Displays Connection of Bot to Discord Server
 @bot.event
 async def on_ready():
     for guild in bot.guilds:
@@ -85,5 +111,3 @@ async def on_message(message):
 
 
 bot.run(TOKEN)
-
-#client.run(TOKEN)
