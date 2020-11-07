@@ -1,2 +1,2 @@
 # discordbot
-hackru 202
+hackru 2020
