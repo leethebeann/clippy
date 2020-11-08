@@ -237,6 +237,15 @@ async def wolfram(ctx, *, text):
     await ctx.send("The answer is: {0}".format(answer))
 
 
+def listToString(s):  
+    
+    # initialize an empty string 
+    str1 = " " 
+    
+    # return string   
+    return (str1.join(s)) 
+        
+
 # Play hangman with the study bot 
 @bot.command(name='hangman', help='play hangman with the study bot')
 async def hangman(ctx):
@@ -256,52 +265,62 @@ async def hangman(ctx):
 
     lives_remaining  =  9
     guesses = ''
+    word_chosen = "will smith"
     word_chosen = word_chosen.lower()
-    #word_chosen = word_chosen.replace(" ", "")
-    length = len(word_chosen)
+    
+    length = len(word_chosen.replace(" ", ""))
     await ctx.send("There are {} letters in the word".format(length))
+    
     while (lives_remaining > 0):
         incorrect = 0
+        guessList = []
         for char in word_chosen:
             if char in guesses:
-                await ctx.send(char)
+                guessList.append(char)
             elif char == ' ':
-                await ctx.send(' ')
+                guessList.append('_ ')
             else:
-                #space = '_'
-                #await ctx.send(space)
+                guessList.append('_ ')
                 incorrect += 1 
         
         if incorrect == 0:
-            print()
             await ctx.send("You saved the man and won! :)")
             break
-        
+
+        l = ' '.join([str(elem) for elem in guessList]) 
+        #print(l)
+        await ctx.send(l)
+
+        await ctx.send("Guess a letter!")
         guess = ''
         if len(guess) < 1:
-            print()
-            #guess = input("Guess a letter") need to get user input successfully
-            #guess = await ctx.wait_for('message')
             guess = await bot.wait_for("message")
         
-        await ctx.send(guess)
+        guess = str(guess.content)
         guesses += guess
 
         if guess not in word_chosen:
             lives_remaining -= 1
-            await ctx.send("Incorrect letter")
-
+            await ctx.send("Incorrect letter")         
+        else:
+            await ctx.send("Correct letter")
+          
         await ctx.send("You have {} lives remaining".format(lives_remaining))
-
+  
         if lives_remaining == 0:
-            print()
+            await ctx.send("The man has died!")
+  
+        
     await ctx.send("The word was: {}".format(word_chosen))
 
 
+""" 
 @bot.command(name="guess", help="Use to guess a letter in hangman")
 async def guessLetter(ctx, *, text):
     letter = text
     return letter
+
+"""
 
 #yt
 
