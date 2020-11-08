@@ -5,14 +5,14 @@ Commands:
 1.   !help     defines the commands
 2.   !add      adds to a user's to do list
 3.   !break    Starts break timer
-  !done     deletes a to do list item from a user's list by list item number
-  !hangman  play hangman with the study bot
-  !join     invite Clippy to the voice channel you're in
-  !pomodoro starts pomodoro timer
-  !react    Clippy reacts to all messages with animal reactions, this starts and stops the reactions
-  !remind   Set a reminder for any day in the format Year/Month/Day (message)
-  !search   google search a topic of interest (Enter the topic you want to sea...
-  !show     shows a user's todo list
-  !stop     Stops all pomodoro timers
-  !time     Displays time remaining for pomodoro clock
-  !wolf     use wolfram alpha to search put math problems and etc
+4.   !done     deletes a to do list item from a user's list by list item number
+5.   !hangman  play hangman with the study bot
+6.   !join     invite Clippy to the voice channel you're in
+7.   !pomodoro starts pomodoro timer
+8.   !react    Clippy reacts to all messages with animal reactions, this starts and stops the reactions
+9.   !remind   Set a reminder for any day in the format Year/Month/Day (message)
+10.   !search   google search a topic of interest (Enter the topic you want to sea...
+11.   !show     shows a user's todo list
+12.   !stop     Stops all pomodoro timers
+13.   !time     Displays time remaining for pomodoro clock
+14.   !wolf     use wolfram alpha to search put math problems and etc
