@@ -21,7 +21,7 @@ bot = commands.Bot(command_prefix='!')
 bot.timer_manager = timers.TimerManager(bot)
 pomodoro_timer = True
 showTimer = False
-breakTime = False
+specialBreakTime = False
 todo_list = [] #to do list
 
 
@@ -63,15 +63,15 @@ async def removeFromList(ctx, *, text): #text would be the index of the todo lis
 @bot.command(name='pomodoro', help='starts pomodoro timer')
 async def pomodoro(ctx):
     start_message = [
-        "You have 25 minutes left! Get to studying :)",
+        "You have 25 minutes left. Get to studying :)",
         "Only 25 more minutes to go!",
-        "Get studying! 25 minutes, on the clock."
+        "Get studying-- 25 minutes, on the clock."
     ]
 
     almost_there_message = [
-        "Don't give up! Only 5 more minutes ",
-        "Only 5 more minutes to go. You got this ",
-        "5 MORE MINUTES ",
+        "Don't give up! Only 10 more minutes ",
+        "Only 10 more minutes to go. You got this ",
+        "10 MORE MINUTES UNTIL BREAK ",
     ]
 
     break_message = [
@@ -83,12 +83,13 @@ async def pomodoro(ctx):
     #global variables 
     global pomodoro_timer
     pomodoro_timer = True
-    global breakTime
-    breakTime = False
-    global showTimer 
+    global showTimer
     showTimer = False
-
-    t = 16 #pomodoro time in seconds
+    global specialBreakTime
+    specialBreakTime = False
+    
+    breakTime = False
+    t = 1501 #pomodoro time in seconds
 
     while(t):
         mins, secs = divmod(t, 60) 
@@ -104,45 +105,52 @@ async def pomodoro(ctx):
         #stops clock
         if(pomodoro_timer == False):
             break
- 
+
+        #break time
+        if(specialBreakTime):
+            breakTime = True
+            t = 0
+            specialBreakTime = False
+
         #start of clock
-        elif(pomodoro_timer == True and t == 15):
+        if(t == 1500):
             response = random.choice(start_message)
             await ctx.send("Hey <@{0}>! {1}".format(ctx.author.id, response))
 
         #5 minute left alert
-        elif(pomodoro_timer == True and t == 6 and breakTime == False):
+        elif(t == 600 and breakTime == False):
             response = random.choice(almost_there_message)
             breakTime = True
             await ctx.send("{1} <@{0}>!".format(ctx.author.id, response))
 
         #break time
-        elif(pomodoro_timer == True and t == 0):
-            if(breakTime == True):
+        elif(t == 0):
+            if(breakTime):
                 response = random.choice(break_message)
                 await ctx.send("{1} <@{0}>!".format(ctx.author.id, response))
-                t = 5
+                t = 301
                 breakTime = False
             else:
-                t = 15
-                #breakTime == True
+                t = 1501
+                await ctx.send("restarting timer")
+            
+            
         
-
-@bot.command(name='stop', help='stops all pomodoro timers')
+@bot.command(name='stop', help='Stops all pomodoro timers')
 async def stopPomodoro(ctx):
     global pomodoro_timer 
     pomodoro_timer = False
     await ctx.send("Pomodoro stopped!")
 
-@bot.command(name='break', help='stops all pomodoro timers')
+@bot.command(name='break', help='Starts break timer')
 async def startBreak(ctx):
-    global breakTime 
-    breakTime = False
+    global specialBreakTime 
+    specialBreakTime = True
     await ctx.send("Starting Break Time now!")
 
 @bot.command(name='time', help='Displays time remaining for pomodoro clock') 
 async def timeRemaining(ctx):
-    global showTimer
+    global showTimers
     showTimer = True
     await ctx.send("Here is the time remaining on the Pomodoro Clock:")
 
@@ -248,23 +256,35 @@ async def hangman(ctx):
 
     lives_remaining  =  9
     guesses = ''
+    word_chosen = word_chosen.lower()
+    #word_chosen = word_chosen.replace(" ", "")
+    length = len(word_chosen)
+    await ctx.send("There are {} letters in the word".format(length))
     while (lives_remaining > 0):
         incorrect = 0
         for char in word_chosen:
             if char in guesses:
                 await ctx.send(char)
+            elif char == ' ':
+                await ctx.send(' ')
             else:
-                await ctx.send('_')
-                incorrect += 1
+                #space = '_'
+                #await ctx.send(space)
+                incorrect += 1 
         
         if incorrect == 0:
-            await ctx.send("You won! :)")
+            print()
+            await ctx.send("You saved the man and won! :)")
             break
         
         guess = ''
         if len(guess) < 1:
-            guess = input("Guess a letter") 
+            print()
+            #guess = input("Guess a letter") need to get user input successfully
+            #guess = await ctx.wait_for('message')
+            guess = await bot.wait_for("message")
         
+        await ctx.send(guess)
         guesses += guess
 
         if guess not in word_chosen:
@@ -274,20 +294,31 @@ async def hangman(ctx):
         await ctx.send("You have {} lives remaining".format(lives_remaining))
 
         if lives_remaining == 0:
-            await ctx.send("Man is dead :(")     
-    
+            print()
     await ctx.send("The word was: {}".format(word_chosen))
 
 
+@bot.command(name="guess", help="Use to guess a letter in hangman")
+async def guessLetter(ctx, *, text):
+    letter = text
+    return letter
 
 #yt
-@bot.command(name='yt', help='plays youtube video')
-async def yt(ctx, url):
-    author = ctx.message.author
-    voice_channel = author.voice_channel
-    vc = await client.join_voice_channel(voice_channel)
 
+@bot.command(pass_context=True, name="play", help="plays yt")
+async def play(ctx, url):
+    #author = ctx.message.author.voice.channel
+    #voice_channel = author.channel
+    channel_id = ctx.message.author.voice.channel.id
+    vc = await bot.join_voice_channel(channel_id)
     player = await vc.create_ytdl_player(url)
     player.start()
+
+@bot.command(pass_context=True)
+async def join(ctx):
+    message = ctx.message
+    channel_id = ctx.message.author.voice.channel.id
+    channel = bot.get_channel(channel_id)
+    await channel.connect()
 
 bot.run(TOKEN)
