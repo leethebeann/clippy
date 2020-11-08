@@ -2,9 +2,9 @@
 Clippy is a discord study bot that has several features that help improve studying, especially with group studying. It tells you words of encouragement when you say that you are unmotivated with keywords like “failed”, “tired”, etc. Clippy has a pomodoro timer that tells you to study for 25 minutes and then to take a break for 5 minutes. It also has google search abilities, where you can easily search google anything from your discord channel and have the summary and links to the first three things that come up. To help on group assignments, everyone in the server can contribute to a group todo list where anyone can do items to the list, take items off when they’re done, and view the current todo list. To help with your math homework, it can also do math! Clippy also has the abilities of a graphing calculator and more using Wolfram Alpha. To keep you company, Clippy can also join the voice channels! Lastly, to help us destress during stressful times of studying, Clippy has a hangman feature, where you can play hangman with Clippy. Also, to spice things up, Clippy reacts to every message with an animal emoji when the react feature is turned on.
 
 Commands:
-  !help     defines the commands
-  !add      adds to a user's to do list
-  !break    Starts break timer
+1.   !help     defines the commands
+2.   !add      adds to a user's to do list
+3.   !break    Starts break timer
   !done     deletes a to do list item from a user's list by list item number
   !hangman  play hangman with the study bot
   !join     invite Clippy to the voice channel you're in
