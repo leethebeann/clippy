@@ -22,6 +22,7 @@ bot.timer_manager = timers.TimerManager(bot)
 pomodoro_timer = True
 showTimer = False
 specialBreakTime = False
+emojisOn = False
 todo_list = [] #to do list
 
 
@@ -150,7 +151,7 @@ async def startBreak(ctx):
 
 @bot.command(name='time', help='Displays time remaining for pomodoro clock') 
 async def timeRemaining(ctx):
-    global showTimers
+    global showTimer
     showTimer = True
     await ctx.send("Here is the time remaining on the Pomodoro Clock:")
 
@@ -169,6 +170,17 @@ async def on_reminder(channel_id, author_id, text):
 
     await channel.send("Hey, <@{0}>, remember to: {1}".format(author_id, text))  
 
+# Emoji reacts to all messages -- !react
+@bot.command(name='react', help='Clippy reacts to all messages')
+async def react(ctx):
+    global emojisOn
+    if(emojisOn):
+        emojisOn = False
+        await ctx.send("No more Clippy reacts")
+    else:
+        emojisOn = True
+        await ctx.send("Clippy Reacts On!")
+
 # Motivational responses based on the keywords "tired" and "failed"
 @bot.event
 async def on_message(message):
@@ -176,9 +188,10 @@ async def on_message(message):
 
     # Animal emoji reactions!
     reactions = ['🐮', '🐷', '🐒', '🐼', '🐥', '🦕', '🐙']
-    #for emoji in reactions: 
-    emoji = random.choice(reactions)
-    await message.add_reaction(emoji)
+    if(emojisOn):
+        #for emoji in reactions: 
+        emoji = random.choice(reactions)
+        await message.add_reaction(emoji)
 
     if message.author == bot.user:
         return
@@ -236,16 +249,6 @@ async def wolfram(ctx, *, text):
     answer = next(res.results).text 
     await ctx.send("The answer is: {0}".format(answer))
 
-
-def listToString(s):  
-    
-    # initialize an empty string 
-    str1 = " " 
-    
-    # return string   
-    return (str1.join(s)) 
-        
-
 # Play hangman with the study bot 
 @bot.command(name='hangman', help='play hangman with the study bot')
 async def hangman(ctx):
@@ -266,10 +269,9 @@ async def hangman(ctx):
     lives_remaining  =  9
     guesses = ''
     word_chosen = word_chosen.lower()
-    
     length = len(word_chosen.replace(" ", ""))
     await ctx.send("There are {} letters in the word".format(length))
-    
+ 
     while (lives_remaining > 0):
         incorrect = 0
         guessList = []
@@ -279,11 +281,10 @@ async def hangman(ctx):
             elif char == ' ':
                 guessList.append(' ')
             else:
-                guessList.append('_ ')
+                guessList.append('-')
                 incorrect += 1 
         
         l = ' '.join([str(elem) for elem in guessList]) 
-        #print(l)
         await ctx.send(l)
 
         if incorrect == 0:
@@ -293,8 +294,7 @@ async def hangman(ctx):
         guess = ''
         if len(guess) < 1:
             await ctx.send("Guess a letter!")
-        
-        guess = await bot.wait_for("message")
+        guess = await bot.wait_for("message", check=lambda message: message.author == ctx.author)
         guess = str(guess.content)
         guesses += guess
 
@@ -307,20 +307,9 @@ async def hangman(ctx):
         await ctx.send("You have {} lives remaining".format(lives_remaining))
   
         if lives_remaining == 0:
-            await ctx.send("The man has died!")
-        
-  
+            await ctx.send("You could not save the man and lost :(")
         
     await ctx.send("The word was: {}".format(word_chosen))
-
-
-""" 
-@bot.command(name="guess", help="Use to guess a letter in hangman")
-async def guessLetter(ctx, *, text):
-    letter = text
-    return letter
-
-"""
 
 #yt
 #joins voice channel of user
