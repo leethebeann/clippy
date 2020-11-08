@@ -265,7 +265,6 @@ async def hangman(ctx):
 
     lives_remaining  =  9
     guesses = ''
-    word_chosen = "will smith"
     word_chosen = word_chosen.lower()
     
     length = len(word_chosen.replace(" ", ""))
@@ -278,24 +277,24 @@ async def hangman(ctx):
             if char in guesses:
                 guessList.append(char)
             elif char == ' ':
-                guessList.append('_ ')
+                guessList.append(' ')
             else:
                 guessList.append('_ ')
                 incorrect += 1 
         
-        if incorrect == 0:
-            await ctx.send("You saved the man and won! :)")
-            break
-
         l = ' '.join([str(elem) for elem in guessList]) 
         #print(l)
         await ctx.send(l)
 
-        await ctx.send("Guess a letter!")
+        if incorrect == 0:
+            await ctx.send("You saved the man and won! :)")
+            break
+
         guess = ''
         if len(guess) < 1:
-            guess = await bot.wait_for("message")
+            await ctx.send("Guess a letter!")
         
+        guess = await bot.wait_for("message")
         guess = str(guess.content)
         guesses += guess
 
@@ -309,6 +308,7 @@ async def hangman(ctx):
   
         if lives_remaining == 0:
             await ctx.send("The man has died!")
+        
   
         
     await ctx.send("The word was: {}".format(word_chosen))
@@ -323,16 +323,7 @@ async def guessLetter(ctx, *, text):
 """
 
 #yt
-
-@bot.command(pass_context=True, name="play", help="plays yt")
-async def play(ctx, url):
-    #author = ctx.message.author.voice.channel
-    #voice_channel = author.channel
-    channel_id = ctx.message.author.voice.channel.id
-    vc = await bot.join_voice_channel(channel_id)
-    player = await vc.create_ytdl_player(url)
-    player.start()
-
+#joins voice channel of user
 @bot.command(pass_context=True)
 async def join(ctx):
     message = ctx.message
