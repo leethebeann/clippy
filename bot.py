@@ -30,16 +30,17 @@ todo_list = [] #to do list
 @bot.command(name='show', help="shows a user's todo list")
 async def toDoList(ctx):
     global todo_list
-    #print(todo_list)
+
     count = 1
 
     if len(todo_list) == 0:
-        await ctx.send("Congrats! Your To Do List is empty!")
-    
+        await ctx.send("**Congrats! Your To Do List is empty!**")
+    listItem = "``` To Do List \n"
     for items in todo_list:
-        listItem = "{0}. {1}".format(count, items)
-        await ctx.send(listItem)
+        listItem = listItem + "{0}. {1}\n".format(count, items)
         count += 1
+    listItem = listItem + "```"
+    await ctx.send(listItem)
 
     
 @bot.command(name='add', help="adds to a user's to do list")
@@ -47,18 +48,16 @@ async def addToList(ctx, *, text):
     global todo_list
 
     todo_list.append(text)
-    #print(todo_list)
-    await ctx.send("{0} has been added".format(text))
+    await ctx.send("> *{0}* has been added".format(text))
 
 @bot.command(name='done', help="deletes a to do list item from a user's list by list item number")
 async def removeFromList(ctx, *, text): #text would be the index of the todo list item
     global todo_list
-    print(todo_list)
 
     index = int(text)
     task = todo_list[index-1]
     todo_list.pop(index-1)
-    await ctx.send("Congrats for finishing a task! \"{0}\" has been removed from the list".format(task))
+    await ctx.send("**Congrats for finishing a task!** \n \"{0}\"  has been removed from the list".format(task))
 
 # Pomodoro study timer -- commands: !pomodoro, !stop, !break, !time
 @bot.command(name='pomodoro', help='starts pomodoro timer')
@@ -94,7 +93,7 @@ async def pomodoro(ctx):
 
     while(t):
         mins, secs = divmod(t, 60) 
-        timer = "{:02d}:{:02d}".format(mins, secs) 
+        timer = "**{:02d}:{:02d}**".format(mins, secs) 
         await asyncio.sleep(1) 
         t -= 1
         
@@ -133,7 +132,7 @@ async def pomodoro(ctx):
                 breakTime = False
             else:
                 t = 1501
-                await ctx.send("restarting timer")
+                #await ctx.send("restarting timer")
             
             
         
@@ -141,19 +140,19 @@ async def pomodoro(ctx):
 async def stopPomodoro(ctx):
     global pomodoro_timer 
     pomodoro_timer = False
-    await ctx.send("Pomodoro stopped!")
+    await ctx.send("*Pomodoro stopped!*")
 
 @bot.command(name='break', help='Starts break timer')
 async def startBreak(ctx):
     global specialBreakTime 
     specialBreakTime = True
-    await ctx.send("Starting Break Time now!")
+    await ctx.send("*Starting Break Time now!*")
 
 @bot.command(name='time', help='Displays time remaining for pomodoro clock') 
 async def timeRemaining(ctx):
     global showTimer
     showTimer = True
-    await ctx.send("Here is the time remaining on the Pomodoro Clock:")
+    await ctx.send("*Here is the time remaining on the Pomodoro Clock:*")
 
 # Sets reminders -- !remind
 @bot.command(name='remind', help='Set a reminder for any day in the format Year/Month/Day (message)')
@@ -176,10 +175,10 @@ async def react(ctx):
     global emojisOn
     if(emojisOn):
         emojisOn = False
-        await ctx.send("No more Clippy reacts")
+        await ctx.send("**No more Clippy reacts**")
     else:
         emojisOn = True
-        await ctx.send("Clippy Reacts On!")
+        await ctx.send("**Clippy Reacts On!**")
 
 # Motivational responses based on the keywords "tired" and "failed"
 @bot.event
@@ -262,7 +261,7 @@ async def hangman(ctx):
     topic_list = ["Movies", "Netflix Shows", "Celebrities", "Animals", "Vegetables"] 
 
     topic = random.choice(topic_list)
-    await ctx.send("Let's play Hangman! The topic is {}.".format(topic))
+    await ctx.send("**Let's play Hangman!** The topic is ***{}***.".format(topic))
     word_list = thisdict.get(topic)
     word_chosen = random.choice(word_list)
 
@@ -270,7 +269,7 @@ async def hangman(ctx):
     guesses = ''
     word_chosen = word_chosen.lower()
     length = len(word_chosen.replace(" ", ""))
-    await ctx.send("There are {} letters in the word".format(length))
+    await ctx.send("There are **{} letters** in the word".format(length))
  
     while (lives_remaining > 0):
         incorrect = 0
@@ -288,7 +287,7 @@ async def hangman(ctx):
         await ctx.send(l)
 
         if incorrect == 0:
-            await ctx.send("You saved the man and won! :)")
+            await ctx.send("**You saved the man and won! :)**")
             break
 
         guess = ''
@@ -300,14 +299,14 @@ async def hangman(ctx):
 
         if guess not in word_chosen:
             lives_remaining -= 1
-            await ctx.send("Incorrect letter")         
+            await ctx.send("**Incorrect letter**")         
         else:
-            await ctx.send("Correct letter")
+            await ctx.send("**Correct letter**")
           
-        await ctx.send("You have {} lives remaining".format(lives_remaining))
+        await ctx.send("*You have **{} lives** remaining*".format(lives_remaining))
   
         if lives_remaining == 0:
-            await ctx.send("You could not save the man and lost :(")
+            await ctx.send("**You could not save the man and lost :(**")
         
     await ctx.send("The word was: {}".format(word_chosen))
 
