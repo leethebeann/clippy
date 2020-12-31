@@ -13,8 +13,8 @@ from googlesearch import search
 
 
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-GUILD = os.getenv('DISCORD_GUILD')
+TOKEN = os.getenv('782789966979137546')
+GUILD = os.getenv('academics unite')
 
 #variables
 bot = commands.Bot(command_prefix='!')
@@ -319,4 +319,4 @@ async def join(ctx):
     channel = bot.get_channel(channel_id)
     await channel.connect()
 
-bot.run(TOKEN)
+bot.run(TNzk0MDczNzQ0MjcyMjYxMTQw.X-1gzQ.4vABfNSblefnsRKn-laYvaZR0yk)
